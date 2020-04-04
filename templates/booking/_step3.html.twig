@@ -1,0 +1,44 @@
+
+
+{{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+
+<h3 class="mb-4">Überprüfung Ihrer Angaben</h3>
+
+    <div class="form-total mb-4">
+{% for participant in booking.participants %}
+        <div class="bg-gray p-3 form-total__row-participant">
+            <div class="row">
+
+                <div class="col-12 col-md-4">
+                    {{ participant.firstName }} {{ participant.lastName }}<br />
+                    {{ participant.email }}
+                </div>
+            </div>
+        </div>
+{% endfor %}
+
+
+    </div>
+
+
+    <div class="card">
+        {{- form_widget(form.dummy) -}}
+        <div class="card-body">
+            <div class="mb-2">
+                {{- form_widget(form.acceptTermsAndConditions) -}}
+            </div>
+
+            <div class="">
+                {{- form_widget(form.acceptDataProcessing) -}}
+            </div>
+        </div>
+    </div>
+
+
+<hr />
+
+
+<button class="btn btn-success float-right" type="submit">Reservierung absenden</button>
+
+{{ form_end(form) }}
