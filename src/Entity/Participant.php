@@ -23,12 +23,16 @@ class Participant
      **/
     private $sequence;
 
-
     /**
      * @var string
      * @ORM\Column(name="input_number", type="integer")
      */
     private $inputNumber = '';
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $result;
 
     /**
      * @return mixed
@@ -76,5 +80,17 @@ class Participant
     public function setinputNumber(string $inputNumber): void
     {
         $this->inputNumber = $inputNumber;
+    }
+
+    public function getResult(): ?string
+    {
+        return $this->result;
+    }
+
+    public function setResult(string $result): self
+    {
+        $this->result = $result;
+
+        return $this;
     }
 }

@@ -16,12 +16,17 @@ use Symfony\Component\Workflow\Registry;
 class HomeController extends AbstractController
 {
     /**
+     * @var array
+     */
+    public $result = [];
+
+    /**
      * @Route("/{force_step}", name="home")
      * @throws \RuntimeException
      * @throws \LogicException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function book(Request $request, Registry $workflows, $force_step = 0)
+    public function sequence(Request $request, Registry $workflows, $force_step = 0)
     {
         $test = $this->getMaxSeguence(10);
         echo $test;
@@ -36,16 +41,22 @@ class HomeController extends AbstractController
 
         /** @var Sequence $sequence */
         $sequence = $session->get('sequence', new Sequence());
-        if ($sequence === null) {
+        if ($sequence === null || $request->get('force_step') === 'new') {
             $sequence = new Sequence();
         }
-        if (\count($sequence->getParticipants()) === 0) {
+        foreach ($sequence->getParticipants() as $participant) {
+            if (empty($participant->getinputNumber())) {
+                $sequence->removeParticipant($participant);
+            }
+        }
+        if (count($sequence->getParticipants()) <= 10) {
             $sequence->addParticipant(new Participant());
         }
         $form = null;
 
         $forms = [
-            'step1' => ['class' => ParticipantsType::class, 'data' => $sequence, 'options' => ['entityManager' => $entityManager]]
+            'step1' => ['class' => ParticipantsType::class, 'data' => $sequence, 'options' => ['entityManager' => $entityManager]],
+            'confirmed' => ['class' => ParticipantsType::class, 'data' => $sequence, 'options' => ['entityManager' => $entityManager]]
         ];
 
         $sequenceContainer = new SequenceContainer($sequence,$forms);
@@ -60,7 +71,7 @@ class HomeController extends AbstractController
         }
 
         // set step if available
-        if ($force_step !== 0 && \in_array($force_step,$availablePlaces)) {
+        if ($force_step !== 0 && in_array($force_step,$availablePlaces)) {
             //dump('force step: '.$force_step);
             $sequenceContainer->currentPlace = $force_step;
         }
@@ -70,36 +81,26 @@ class HomeController extends AbstractController
         if ($formDef) {
 
             $form = $this->createForm($formDef['class'],$formDef['data'],$formDef['options']);
-
-            // request verarbeiten
-            //dump('handle request');
             $form->handleRequest($request);
-            //dump('/ handle request');
 
-            if ($form->isSubmitted()) {
-                //dump("handled request");
+            if ($form->isSubmitted() && $form->isValid()) {
                 if ($form->getData() instanceof Sequence) {
                     $sequence = $form->getData();
+                    $this->result = [];
                     /** @var Participant $participant */
                     foreach ($sequence->getParticipants() as $participant) {
                         $participant->setSequence($sequence);
+                        $number = (int)$participant->getinputNumber();
+                        $this->getMaxSeguence($number);
+                        $participant->setResult($this->max);
                     }
                     $sequenceContainer->sequence = $sequence;
                 }
-
-            }
-
-            if ($form->isSubmitted() && $form->isValid()) {
-
-                if ($sequenceContainer->currentPlace === 'confirmed') {
-                    $session->set('sequence', null);
-                    return $this->redirectToRoute('book_completed');
-                }
-                // goto latest available step
-                return $this->redirectToRoute('home');
+                return $this->redirectToRoute('home', array('force_step' => 'step1'));
             }
         }
 
+dump($this->result);
         // See all the available transitions for the post in the current state
         $transitions = $workflow->getEnabledTransitions($sequenceContainer);
 
@@ -112,12 +113,13 @@ class HomeController extends AbstractController
             'sequenceContainer' => $sequenceContainer,
             'availablePlaces' => $availablePlaces,
             'numParticipants' => ($sequence !== null) ? count($sequence->getParticipants()) : 0,
+            'result' => $this->max
         ]);
     }
 
 
     /**
-     * @Route("/buchung-abgeschlossen", name="book_completed")
+     * @Route("/completed", name="completed")
      */
     public function completed()
     {
@@ -138,7 +140,8 @@ class HomeController extends AbstractController
                 $max = $sec;
             }
         }
-        printf("%ld\n",$max);
+        $this->max = $max;
+//        printf("%ld\n",$max);
     }
 
     public function getSeguence($n)

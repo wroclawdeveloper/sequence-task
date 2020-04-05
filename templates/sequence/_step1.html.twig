@@ -1,7 +1,7 @@
 {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-<h3>Entering A Value</h3>
-
+<h3>Enter A Value</h3>
+{{ result }}
 {{ form_errors(form) }}
 
 <ul class="list-unstyled participants-form participants o-h mb-3" data-prototype="{{ form_widget(form.participants.vars.prototype)|e('html_attr') }}">
@@ -9,6 +9,9 @@
         {% for participant in form.participants %}
             <li class="item">
                 {{ form_row(participant.inputNumber) }}
+                {% if participant.result is not null %}
+                    {{ form_row(participant.result) }}
+                {% endif %}
             </li>
         {% endfor %}
 </ul>

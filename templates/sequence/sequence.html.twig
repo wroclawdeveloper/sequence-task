@@ -8,26 +8,31 @@
 
         <ul class="js-pagination u-carousel-indicators-v30 g-pos-abs g-top-0">
             <li class="{% if workflow_has_marked_place(sequenceContainer, 'step1') %}slick-active{% endif %}">
-
                 <a href="{{ path('home',{ 'force_step' : 'step1' }) }}">
                     <i class="u-dot-line-v1 g-brd-gray-light-v2--before g-brd-gray-light-v2--after g-mb-15--sm">
                         <span class="u-dot-line-v1__inner g-bg-white g-bg-primary--before g-brd-gray-light-v2 g-brd-primary--hover g-brd-primary--active g-transition--ease-in g-transition-0_2"></span>
                     </i>
-                    <span class="g-hidden-sm-down g-color-black g-font-size-15">Input Number</span>
+                    <span class="g-hidden-sm-down g-color-black g-font-size-15">Input New Number</span>
                 </a>
-
-            </li>
-            <li class="{% if workflow_has_marked_place(sequenceContainer, 'confirm') %}slick-active{% endif %}">
-                <i class="u-dot-line-v1 g-brd-gray-light-v2--before g-brd-gray-light-v2--after g-mb-15--sm">
-                    <span class="u-dot-line-v1__inner g-bg-white g-bg-primary--before g-brd-gray-light-v2 g-brd-primary--hover g-brd-primary--active g-transition--ease-in g-transition-0_2"></span>
-                </i>
-                <span class="g-hidden-sm-down g-color-black g-font-size-15 ">Corresponding Maximum Value for Input</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{{ path('home',{ 'force_step' : 'new' }) }}">
+                    <i class="u-dot-line-v1 g-brd-gray-light-v2--before g-brd-gray-light-v2--after g-mb-15--sm">
+                        <span class="u-dot-line-v1__inner g-bg-white g-bg-primary--before g-brd-gray-light-v2 g-brd-primary--hover g-brd-primary--active g-transition--ease-in g-transition-0_2"></span>
+                    </i>
+                    <span class="g-hidden-sm-down g-color-black g-font-size-15">New Test Suite</span>
+                </a>
             </li>
         </ul>
 
         {% if workflow_has_marked_place(sequenceContainer, 'step1') %}
 
             {{ include('sequence/_step1.html.twig', {  }) }}
+
+        {% endif %}
+
+        {% if workflow_has_marked_place(sequenceContainer, 'confirmed') %}
+
+            {{ include('sequence/completed.html.twig', {  }) }}
 
         {% endif %}
 

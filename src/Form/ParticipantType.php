@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class ParticipantType extends AbstractType
 {
@@ -16,8 +17,16 @@ class ParticipantType extends AbstractType
     {
         $builder
             ->add('inputNumber', TextType::class, ['constraints' => [
-                new NotBlank()
+                new NotBlank(),
+                new Regex(array(
+                    'pattern'   => '/^[0-9]+$/',
+                    'match'     => true,
+                    'message'   => 'Proszę wprowadzić liczbę.'
+                ))
             ]])
+            ->add('result', TextType::class, ['constraints' => [
+            ],
+            'attr' => ['disabled' => 'disabled']])
         ;
 
         /** @var FormBuilderInterface $element */

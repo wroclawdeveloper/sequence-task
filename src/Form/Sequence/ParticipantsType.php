@@ -14,7 +14,6 @@ class ParticipantsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $builder
             ->add('participants', CollectionType::class, [
                 'entry_type' => ParticipantType::class,

@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace App\Form\Extension\Validator\ViolationMapper;
 
 use Symfony\Component\Form\Extension\Validator\ViolationMapper\MappingRule;
@@ -24,9 +15,6 @@ use Symfony\Component\PropertyAccess\PropertyPathIteratorInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Validator\ConstraintViolation;
 
-/**
- * @author Sven Wappler
- */
 class ViolationMapper implements ViolationMapperInterface
 {
     /**
@@ -129,13 +117,13 @@ class ViolationMapper implements ViolationMapperInterface
 
         // Only add the error if the form is synchronized
         if ($this->acceptsErrors($scope)) {
-            $scope->addError(new FormError(
-                $violation->getMessage(),
-                $violation->getMessageTemplate(),
-                $violation->getParameters(),
-                $violation->getPlural(),
-                $violation
-            ));
+//            $scope->addError(new FormError(
+//                $violation->getMessage(),
+//                $violation->getMessageTemplate(),
+//                $violation->getParameters(),
+//                $violation->getPlural(),
+//                $violation
+//            ));
         }
     }
 
