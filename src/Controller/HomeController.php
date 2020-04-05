@@ -13,12 +13,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Workflow\Exception\LogicException;
 use Symfony\Component\Workflow\Registry;
 
+/**
+ * Class HomeController
+ * @package App\Controller
+ */
 class HomeController extends AbstractController
 {
     /**
      * @var array
      */
-    public $result = [];
+    public $max = null;
 
     /**
      * @Route("/{force_step}", name="home")
@@ -28,20 +32,22 @@ class HomeController extends AbstractController
      */
     public function sequence(Request $request, Registry $workflows, $force_step = 0)
     {
-        $test = $this->getMaxSeguence(10);
-        echo $test;
-
         $session = $request->getSession();
         if ($session === null) {
             $session = new Session();
             $session->start();
+        }
+        $sequence = $session->get('sequence', new Sequence());
+        if ($request->get('force_step') === 'new') {
+            $sequence = $session->set('sequence', null);
+            return $this->redirectToRoute('home', array('force_step' => 'step1'));
         }
 
         $entityManager = $this->getDoctrine()->getManager();
 
         /** @var Sequence $sequence */
         $sequence = $session->get('sequence', new Sequence());
-        if ($sequence === null || $request->get('force_step') === 'new') {
+        if ($sequence === null) {
             $sequence = new Sequence();
         }
         foreach ($sequence->getParticipants() as $participant) {
@@ -49,7 +55,7 @@ class HomeController extends AbstractController
                 $sequence->removeParticipant($participant);
             }
         }
-        if (count($sequence->getParticipants()) <= 10) {
+        if (count($sequence->getParticipants()) < 10) {
             $sequence->addParticipant(new Participant());
         }
         $form = null;
@@ -59,7 +65,7 @@ class HomeController extends AbstractController
             'confirmed' => ['class' => ParticipantsType::class, 'data' => $sequence, 'options' => ['entityManager' => $entityManager]]
         ];
 
-        $sequenceContainer = new SequenceContainer($sequence,$forms);
+        $sequenceContainer = new SequenceContainer($sequence, $forms);
         $workflow = $workflows->get($sequenceContainer);
 
         // Update the currentState on the sequence
@@ -72,7 +78,6 @@ class HomeController extends AbstractController
 
         // set step if available
         if ($force_step !== 0 && in_array($force_step,$availablePlaces)) {
-            //dump('force step: '.$force_step);
             $sequenceContainer->currentPlace = $force_step;
         }
 
@@ -100,10 +105,8 @@ class HomeController extends AbstractController
             }
         }
 
-dump($this->result);
         // See all the available transitions for the post in the current state
         $transitions = $workflow->getEnabledTransitions($sequenceContainer);
-
         $session->set('sequence', $sequence);
 
         return $this->render('sequence/sequence.html.twig', [
@@ -114,16 +117,6 @@ dump($this->result);
             'availablePlaces' => $availablePlaces,
             'numParticipants' => ($sequence !== null) ? count($sequence->getParticipants()) : 0,
             'result' => $this->max
-        ]);
-    }
-
-
-    /**
-     * @Route("/completed", name="completed")
-     */
-    public function completed()
-    {
-        return $this->render('sequence/completed.html.twig', [
         ]);
     }
 

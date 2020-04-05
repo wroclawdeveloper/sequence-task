@@ -16,6 +16,10 @@
         {% endfor %}
 </ul>
 
+{% if form.participants|length == 10 %}
+    <h3>Task is completed</h3>
+{% endif %}
+
 <hr />
 
 <div class="clearfix">

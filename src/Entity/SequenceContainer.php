@@ -1,17 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: svewap
- * Date: 23.03.18
- * Time: 11:05
- */
 
 namespace App\Entity;
 
-
 class SequenceContainer
 {
-
+    /**
+     * SequenceContainer constructor.
+     * @param $sequence
+     * @param $forms
+     */
     public function __construct($sequence, $forms)
     {
         $this->sequence = $sequence;
@@ -23,14 +20,14 @@ class SequenceContainer
      */
     public $sequence;
 
-
     /**
      * @var array
      */
     public $forms;
 
-
-    /* workflow marking store */
+    /**
+     * @var
+     */
     public $currentPlace;
 
 }

@@ -23,7 +23,9 @@ class ParticipantType extends AbstractType
                     'match'     => true,
                     'message'   => 'Proszę wprowadzić liczbę.'
                 ))
-            ]])
+            ],
+            'attr' => ['pattern' => '/^[0-9]{8}$/', 'maxlength' => 5]
+            ])
             ->add('result', TextType::class, ['constraints' => [
             ],
             'attr' => ['disabled' => 'disabled']])
