@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Workflow\Exception\LogicException;
 use Symfony\Component\Workflow\Registry;
+use App\Service\SequenceHelper;
 
 /**
  * Class HomeController
@@ -20,17 +21,12 @@ use Symfony\Component\Workflow\Registry;
 class HomeController extends AbstractController
 {
     /**
-     * @var array
-     */
-    public $max = null;
-
-    /**
      * @Route("/{force_step}", name="home")
      * @throws \RuntimeException
      * @throws \LogicException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function sequence(Request $request, Registry $workflows, $force_step = 0)
+    public function sequence(Request $request, Registry $workflows, SequenceHelper $sequenceHelper, $force_step = 0)
     {
         $session = $request->getSession();
         if ($session === null) {
@@ -96,8 +92,8 @@ class HomeController extends AbstractController
                     foreach ($sequence->getParticipants() as $participant) {
                         $participant->setSequence($sequence);
                         $number = (int)$participant->getinputNumber();
-                        $this->getMaxSeguence($number);
-                        $participant->setResult($this->max);
+                        $max = $sequenceHelper->getMaxSeguence($number);
+                        $participant->setResult($max);
                     }
                     $sequenceContainer->sequence = $sequence;
                 }
@@ -115,37 +111,7 @@ class HomeController extends AbstractController
             'form' => $form ? $form->createView() : null,
             'sequenceContainer' => $sequenceContainer,
             'availablePlaces' => $availablePlaces,
-            'numParticipants' => ($sequence !== null) ? count($sequence->getParticipants()) : 0,
-            'result' => $this->max
+            'numParticipants' => ($sequence !== null) ? count($sequence->getParticipants()) : 0
         ]);
-    }
-
-    public function getMaxSeguence($n)
-    {
-        for($i = 1; $i <= $n; $i++)
-        {
-            $number[$i] = $this->getSeguence($i);
-        }
-
-        if ($n==0) return 0;
-        for($i=0, $max=0; $i<=$n; $i++) {
-            if (($sec = $this->getSeguence($i)) > $max) {
-                $max = $sec;
-            }
-        }
-        $this->max = $max;
-//        printf("%ld\n",$max);
-    }
-
-    public function getSeguence($n)
-    {
-        if ($n == 0)
-            return 0;
-        else if ($n == 1)
-            return 1;
-        else if( $n % 2 == 0 )
-            return $this->getSeguence($n/2);
-        else
-            return ($this->getSeguence(($n-1)/2) + $this->getSeguence(($n-1)/2 + 1));
     }
 }
