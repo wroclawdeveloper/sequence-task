@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\BookingRepository")
  * @ORM\HasLifecycleCallbacks
  */
-class Booking
+class Sequence
 {
     /**
      * @ORM\Id
@@ -22,15 +22,9 @@ class Booking
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="App\Entity\Participant", mappedBy="booking", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Participant", mappedBy="sequence", cascade={"persist", "remove"})
      */
     private $participants;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=256)
-     */
-    private $company = '';
 
     /**
      * @var string
@@ -49,56 +43,7 @@ class Booking
      * @var string
      * @ORM\Column(type="string", length=256)
      */
-    private $department = '';
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=60)
-     */
-    private $telephone = '';
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=256)
-     */
-    private $street = '';
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=10)
-     */
-    private $housenumber = '';
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=10)
-     */
-    private $zipcode = '';
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=40)
-     */
-    private $country = '';
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=256)
-     */
     private $email = '';
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=256)
-     */
-    private $vat = '';
-
-    /**
-     * @var boolean
-     * @ORM\Column(type="boolean")
-     */
-    private $postalInvoice = false;
-
 
     /**
      * @var ?\DateTime
@@ -208,23 +153,6 @@ class Booking
         $this->deletedAt = $deletedAt;
     }
 
-
-    /**
-     * @return string
-     */
-    public function getCompany(): string
-    {
-        return $this->company;
-    }
-
-    /**
-     * @param string $company
-     */
-    public function setCompany(string $company): void
-    {
-        $this->company = $company;
-    }
-
     /**
      * @return string
      */
@@ -260,102 +188,6 @@ class Booking
     /**
      * @return string
      */
-    public function getDepartment(): string
-    {
-        return $this->department;
-    }
-
-    /**
-     * @param string $department
-     */
-    public function setDepartment(string $department): void
-    {
-        $this->department = $department;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTelephone(): string
-    {
-        return $this->telephone;
-    }
-
-    /**
-     * @param string $telephone
-     */
-    public function setTelephone(string $telephone): void
-    {
-        $this->telephone = $telephone;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStreet(): string
-    {
-        return $this->street;
-    }
-
-    /**
-     * @param string $street
-     */
-    public function setStreet(string $street): void
-    {
-        $this->street = $street;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHousenumber(): string
-    {
-        return $this->housenumber;
-    }
-
-    /**
-     * @param string $housenumber
-     */
-    public function setHousenumber(string $housenumber): void
-    {
-        $this->housenumber = $housenumber;
-    }
-
-    /**
-     * @return string
-     */
-    public function getZipcode(): string
-    {
-        return $this->zipcode;
-    }
-
-    /**
-     * @param string $zipcode
-     */
-    public function setZipcode(string $zipcode): void
-    {
-        $this->zipcode = $zipcode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCountry(): string
-    {
-        return $this->country;
-    }
-
-    /**
-     * @param string $country
-     */
-    public function setCountry(string $country): void
-    {
-        $this->country = $country;
-    }
-
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->email;
@@ -368,39 +200,6 @@ class Booking
     {
         $this->email = $email;
     }
-
-    /**
-     * @return string
-     */
-    public function getVat(): string
-    {
-        return $this->vat;
-    }
-
-    /**
-     * @param string $vat
-     */
-    public function setVat(string $vat): void
-    {
-        $this->vat = $vat;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPostalInvoice(): bool
-    {
-        return $this->postalInvoice;
-    }
-
-    /**
-     * @param bool $postalInvoice
-     */
-    public function setPostalInvoice(bool $postalInvoice): void
-    {
-        $this->postalInvoice = $postalInvoice;
-    }
-
 
     /**
      * @return mixed
@@ -421,7 +220,7 @@ class Booking
 
     public function addParticipant(Participant $participant)
     {
-        $participant->setBooking($this);
+        $participant->setSequence($this);
         $this->participants->add($participant);
     }
 
@@ -463,7 +262,6 @@ class Booking
     {
         $this->isConfirmed = $isConfirmed;
     }
-
 
     /**
      *

@@ -1,34 +1,22 @@
-
-
 {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-
-<h3>Teilnehmer</h3>
-
+<h3>Entering A Value</h3>
 
 {{ form_errors(form) }}
 
 <ul class="list-unstyled participants-form participants o-h mb-3" data-prototype="{{ form_widget(form.participants.vars.prototype)|e('html_attr') }}">
-
         {# iterate over each existing tag and render its only field: name #}
         {% for participant in form.participants %}
             <li class="item">
-
-                {{ form_row(participant.firstName) }}
-                {{ form_row(participant.lastName) }}
-                {{ form_row(participant.email) }}
-
+                {{ form_row(participant.inputNumber) }}
             </li>
         {% endfor %}
-
 </ul>
 
 <hr />
 
 <div class="clearfix">
-
-    <button class="btn btn-success float-right" type="submit">Weiter</button>
-
+    <button class="btn btn-success float-right" type="submit">Submit</button>
 </div>
 
 {{ form_end(form) }}

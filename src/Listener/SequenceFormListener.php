@@ -1,7 +1,7 @@
 <?php
 namespace App\Listener;
 
-use App\Entity\BookingContainer;
+use App\Entity\SequenceContainer;
 use App\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
@@ -11,19 +11,19 @@ use Symfony\Component\Form\Forms;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Workflow\Event\GuardEvent;
 
-class BookingFormListener implements EventSubscriberInterface
+class SequenceFormListener implements EventSubscriberInterface
 {
 
     public function validateForm(GuardEvent $event)
     {
-        /** @var BookingContainer $bookingContainer */
-        $bookingContainer = $event->getSubject();
+        /** @var SequenceContainer $sequenceContainer */
+        $sequenceContainer = $event->getSubject();
 
-        dump("validateForm for ".$bookingContainer->currentPlace);
+        dump("validateForm for ".$sequenceContainer->currentPlace);
 
-        $forms = $bookingContainer->forms;
+        $forms = $sequenceContainer->forms;
 
-        $formDef = $forms[$bookingContainer->currentPlace];
+        $formDef = $forms[$sequenceContainer->currentPlace];
 
         $validator = Validation::createValidator();
 
@@ -42,11 +42,11 @@ class BookingFormListener implements EventSubscriberInterface
         $errors = $form->getErrors(true);
         // Validator auf Fehler abfragen
         if (\count($errors) > 0) {
-            dump($bookingContainer->currentPlace." blocked");
+            dump($sequenceContainer->currentPlace." blocked");
             //dump($errors);
             $event->setBlocked(true);
         } else {
-            dump($bookingContainer->currentPlace." not blocked");
+            dump($sequenceContainer->currentPlace." not blocked");
         }
 
         //$event->setBlocked(true);
@@ -56,16 +56,15 @@ class BookingFormListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            'workflow.booking.guard.to_confirmed' => ['validateForm'],
-            'workflow.booking.guard.to_step3' => ['validateForm'],
-            'workflow.booking.guard.to_step2' => ['validateForm'],
+            'workflow.sequence.guard.to_confirmed' => ['validateForm'],
+            'workflow.sequence.guard.to_step3' => ['validateForm'],
+            'workflow.sequence.guard.to_step2' => ['validateForm'],
         ];
     }
 
 
     private function validateWithoutSubmit(FormInterface $form)
     {
-
         $config = $form->getConfig();
         $children = $form->all();
         $dispatcher = $config->getEventDispatcher();

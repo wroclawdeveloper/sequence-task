@@ -9,19 +9,19 @@
 namespace App\Entity;
 
 
-class BookingContainer
+class SequenceContainer
 {
 
-    public function __construct($booking, $forms)
+    public function __construct($sequence, $forms)
     {
-        $this->booking = $booking;
+        $this->sequence = $sequence;
         $this->forms = $forms;
     }
 
     /**
-     * @var Booking
+     * @var Sequence
      */
-    public $booking;
+    public $sequence;
 
 
     /**

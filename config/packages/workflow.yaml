@@ -7,19 +7,11 @@ framework:
                 arguments:
                     - 'currentPlace'
             supports:
-                - App\Entity\BookingContainer
+                - App\Entity\SequenceContainer
             places:
                 - step1
-                - step2
-                - step3
                 - confirmed
             transitions:
-                to_step2:
-                    from: step1
-                    to:   step2
-                to_step3:
-                    from: step2
-                    to:   step3
                 to_confirmed:
-                    from: step3
+                    from: step1
                     to:   confirmed

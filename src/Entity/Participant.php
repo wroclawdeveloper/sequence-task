@@ -18,30 +18,17 @@ class Participant
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Booking",inversedBy="participants")
-     * @ORM\JoinColumn(name="booking_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Sequence",inversedBy="participants")
+     * @ORM\JoinColumn(name="sequence_id", referencedColumnName="id")
      **/
-    private $booking;
+    private $sequence;
 
 
     /**
      * @var string
-     * @ORM\Column(name="first_name", type="string", length=60)
+     * @ORM\Column(name="input_number", type="integer")
      */
-    private $firstName = '';
-
-
-    /**
-     * @var string
-     * @ORM\Column(name="last_name", type="string", length=60)
-     */
-    private $lastName = '';
-
-    /**
-     * @var string
-     * @ORM\Column(name="email", type="string", length=250)
-     */
-    private $email = '';
+    private $inputNumber = '';
 
     /**
      * @return mixed
@@ -62,66 +49,32 @@ class Participant
     /**
      * @return mixed
      */
-    public function getBooking()
+    public function getSequence()
     {
-        return $this->booking;
+        return $this->sequence;
     }
 
     /**
-     * @param mixed $booking
+     * @param mixed $sequence
      */
-    public function setBooking($booking): void
+    public function setSequence($sequence): void
     {
-        $this->booking = $booking;
+        $this->sequence = $sequence;
     }
 
     /**
-     * @return string
+     * @return integer
      */
-    public function getFirstName(): string
+    public function getinputNumber(): string
     {
-        return $this->firstName;
+        return $this->inputNumber;
     }
 
     /**
-     * @param string $firstName
+     * @param integer $inputNumber
      */
-    public function setFirstName(string $firstName): void
+    public function setinputNumber(string $inputNumber): void
     {
-        $this->firstName = $firstName;
+        $this->inputNumber = $inputNumber;
     }
-
-    /**
-     * @return string
-     */
-    public function getLastName(): string
-    {
-        return $this->lastName;
-    }
-
-    /**
-     * @param string $lastName
-     */
-    public function setLastName(string $lastName): void
-    {
-        $this->lastName = $lastName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    /**
-     * @param string $email
-     */
-    public function setEmail(string $email): void
-    {
-        $this->email = $email;
-    }
-
-
 }

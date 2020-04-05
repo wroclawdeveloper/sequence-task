@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Booking;
+namespace App\Form\Sequence;
 
-use App\Entity\Booking;
+use App\Entity\Sequence;
 use App\Form\ParticipantType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -31,14 +31,12 @@ class ParticipantsType extends AbstractType
                     ])
                 ],
             ]);
-
-
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Booking::class,
+            'data_class' => Sequence::class,
         ]);
         $resolver->setRequired('entityManager');
     }
